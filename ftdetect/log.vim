@@ -6,3 +6,4 @@ au BufNewFile,BufRead *.log.\+[0-9]\+ set filetype=log
 au BufNewFile,BufRead *.LOG.\+[0-9]\+ set filetype=log
 au BufNewFile,BufRead *.log.\+[0-9]\+.gz set filetype=log
 au BufNewFile,BufRead *.LOG.\+[0-9]\+.gz set filetype=log
+au BufNewFile,BufRead *.log-*.gz set filetype=log

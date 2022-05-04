@@ -13,7 +13,7 @@ set cpoptions&vim
 
 " Operators
 "---------------------------------------------------------------------------
-syn match logOperator display '[;,\?\:\.\<=\>\~\/\@\&\!$\%\&\+\-\|\^(){}\*#]'
+syn match logOperator display '[;,\?\:\.\<=\>\~\/\@\!$\%&\+\-\|\^(){}\*#]'
 syn match logBrackets display '[\[\]]'
 syn match logEmptyLines display '-\{3,}'
 syn match logEmptyLines display '\*\{3,}'
@@ -37,38 +37,35 @@ syn match logEmptyLines display '- - '
 "syn region logString      start=/'\(s \|t \| \w\)\@!/ end=/'/ end=/$/ end=/s / skip=/\\./
 
 
-"" Dates and Times
-""---------------------------------------------------------------------------
+" Dates and Times
+"---------------------------------------------------------------------------
 " Matches 2018-03-12T or 12/03/2018 or 12/Mar/2018
 syn match logDate '\d\{2,4}[-\/]\(\d\{2}\|Jan\|Feb\|Mar\|Apr\|May\|Jun\|Jul\|Aug\|Sep\|Oct\|Nov\|Dec\)[-\/]\d\{2,4}T\?'
-"" Matches 8 digit numbers at start of line starting with 20
-"syn match logDate '^20\d\{6}'
-"" Matches Fri Jan 09 or Feb 11 or Apr  3
-"syn match logDate '\(\(Mon\|Tue\|Wed\|Thu\|Fri\|Sat\|Sun\) \)\?\(Jan\|Feb\|Mar\|Apr\|May\|Jun\|Jul\|Aug\|Sep\|Oct\|Nov\|Dec\) [0-9 ]\d'
+" Matches 8 digit numbers at start of line starting with 20
+syn match logDate '^20\d\{6}'
+" Matches Fri Jan 09 or Feb 11 or Apr  3 or Sun 3
+syn keyword logDate Mon Tue Wed Thu Fri Sat Sun Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec nextgroup=logDateDay
+syn match logDateDay '\s\{1,2}\d\{1,2}' contained
 
 " Matches 12:09:38 or 00:03:38.129Z or 01:32:12.102938 +0700
 syn match logTime '\d\{2}:\d\{2}:\d\{2}\(\.\d\{2,6}\)\?\(\s\?[-+]\d\{2,4}\|Z\)\?\>' nextgroup=logTimeZone,logSysColumns skipwhite
-"
-"" Follows logTime, matches UTC or PDT 2019 or 2019 EDT
-"syn match logTimeZone '[A-Z]\{2,5}\>\( \d\{4}\)\?' contained
-"syn match logTimeZone '\d\{4} [A-Z]\{2,5}\>' contained
+
+" Follows logTime, matches UTC or PDT 2019 or 2019 EDT
+syn match logTimeZone '[A-Z]\{2,5}\>\( \d\{4}\)\?' contained
+syn match logTimeZone '\d\{4} [A-Z]\{2,5}\>' contained
 
 
-"" Entities
-""---------------------------------------------------------------------------
-"syn match logUrl        'http[s]\?:\/\/[^\n|,; '"]\+'
+" Entities
+"---------------------------------------------------------------------------
+syn match logUrl        'http[s]\?:\/\/[^\n|,; '"]\+'
 "syn match logDomain     /\v(^|\s)(\w|-)+(\.(\w|-)+)+\s/
-"syn match logUUID       '\w\{8}-\w\{4}-\w\{4}-\w\{4}-\w\{12}'
+syn match logUUID       '\w\{8}-\w\{4}-\w\{4}-\w\{4}-\w\{12}'
 "syn match logMD5        '\<[a-z0-9]\{32}\>'
 syn match logIPV4       '\<\d\{1,3}\(\.\d\{1,3}\)\{3}\>'
-"syn match logIPV6       '\<\x\{1,4}\(:\x\{1,4}\)\{7}\>'
-"syn match logMacAddress '\<\x\{2}\(:\x\{2}\)\{5}'
-"syn match logFilePath   '\<\w:\\[^\n|,; ()'"\]{}]\+'
-"syn match logFilePath   '[^a-zA-Z0-9"']\@<=\/\w[^\n|,; ()'"\]{}]\+'
-"syn match logFilePath   '\[[\w\./:]+\]'
-"syn match logFilePath   '\[[0-9A-Za-z_]\+:[0-9]\+\]'
-syn match logFilePath   '\[[\.\/0-9A-Za-z_]\+:[0-9]\+\]'
-
+syn match logIPV6       '\<\x\{1,4}\(:\x\{1,4}\)\{7}\>'
+syn match logMacAddress '\<\x\{2}\(:\x\{2}\)\{5}'
+syn match logFilePath   '\<\w:\\[^\n|,; ()'"\]{}]\+'
+syn match logFilePath   '[^a-zA-Z0-9"']\@<=\/\w[^\n|,; ()'"\]{}]\+'
 
 "" Syslog Columns
 ""---------------------------------------------------------------------------
@@ -89,8 +86,7 @@ syn match logFilePath   '\[[\.\/0-9A-Za-z_]\+:[0-9]\+\]'
 "syn region logXmlComment     start=/<!--/ end=/-->/
 "syn match logXmlCData        /<!\[CDATA\[.*\]\]>/
 "syn match logXmlEntity       /\&\w\+;/
-
-
+"
 " Levels
 "---------------------------------------------------------------------------
 syn keyword logLevelEmergency EMERGENCY EMERG
@@ -103,6 +99,28 @@ syn keyword logLevelInfo INFO
 syn keyword logLevelDebug DEBUG FINE
 syn keyword logLevelTrace TRACE FINER FINEST
 
+syn keyword jblue TX tx
+syn keyword jmag RX rx
+syntax match jblue /\a*TX/
+syntax match jmag /\a*RX/
+syntax match jblue /\a*tx/
+syntax match jmag /\a*rx/
+
+syntax match jyel /.*WARN.*/
+syntax match jyel /.*warn.*/
+syntax match jred /.*ERR.*/
+syntax match jred /.*error.*/
+syntax match jred /.*CRITICAL.*/
+syntax match jred /.*CRIT.*/
+syntax match jred /.*FATAL.*/
+syntax match jred /.*EMERG.*/
+
+highlight jred ctermfg=red
+highlight jyel ctermfg=yellow
+highlight jcyan ctermfg=cyan
+highlight jgreen ctermfg=green
+highlight jblue ctermfg=blue
+highlight jmag ctermfg=magenta
 
 " Highlight links
 "---------------------------------------------------------------------------
@@ -115,6 +133,7 @@ hi def link logNull Constant
 hi def link logString String
 
 hi def link logDate Identifier
+hi def link logDateDay Identifier
 hi def link logTime Function
 hi def link logTimeZone Identifier
 
@@ -152,8 +171,6 @@ hi def link logLevelNotice Character
 hi def link logLevelInfo Repeat
 hi def link logLevelDebug Debug
 hi def link logLevelTrace Comment
-
-
 
 let b:current_syntax = 'log'
 
