@@ -2,6 +2,8 @@
 " Language:         Generic log file
 " Maintainer:       MTDL9 <https://github.com/MTDL9>
 " Latest Revision:  2019-11-24
+"
+" vim regex: http://vimregex.com/
 
 if exists('b:current_syntax')
   finish
@@ -51,18 +53,18 @@ syn match logDateDay '\s\{1,2}\d\{1,2}' contained
 syn match logTime '\d\{2}:\d\{2}:\d\{2}\(\.\d\{2,6}\)\?\(\s\?[-+]\d\{2,4}\|Z\)\?\>' nextgroup=logTimeZone,logSysColumns skipwhite
 
 " Follows logTime, matches UTC or PDT 2019 or 2019 EDT
-syn match logTimeZone '[A-Z]\{2,5}\>\( \d\{4}\)\?' contained
-syn match logTimeZone '\d\{4} [A-Z]\{2,5}\>' contained
+"syn match logTimeZone '[A-Z]\{2,5}\>\( \d\{4}\)\?' contained
+"syn match logTimeZone '\d\{4} [A-Z]\{2,5}\>' contained
 
 
 " Entities
 "---------------------------------------------------------------------------
-syn match logUrl        'http[s]\?:\/\/[^\n|,; '"]\+'
+"syn match logUrl        'http[s]\?:\/\/[^\n|,; '"]\+'
 "syn match logDomain     /\v(^|\s)(\w|-)+(\.(\w|-)+)+\s/
 syn match logUUID       '\w\{8}-\w\{4}-\w\{4}-\w\{4}-\w\{12}'
 "syn match logMD5        '\<[a-z0-9]\{32}\>'
 syn match logIPV4       '\<\d\{1,3}\(\.\d\{1,3}\)\{3}\>'
-syn match logIPV6       '\<\x\{1,4}\(:\x\{1,4}\)\{7}\>'
+"syn match logIPV6       '\<\x\{1,4}\(:\x\{1,4}\)\{7}\>'
 syn match logMacAddress '\<\x\{2}\(:\x\{2}\)\{5}'
 syn match logFilePath   '\<\w:\\[^\n|,; ()'"\]{}]\+'
 syn match logFilePath   '[^a-zA-Z0-9"']\@<=\/\w[^\n|,; ()'"\]{}]\+'
@@ -94,10 +96,10 @@ syn keyword logLevelAlert ALERT
 syn keyword logLevelCritical CRITICAL CRIT FATAL
 syn keyword logLevelError ERROR ERR FAILURE SEVERE
 syn keyword logLevelWarning WARNING WARN
-syn keyword logLevelNotice NOTICE
-syn keyword logLevelInfo INFO
-syn keyword logLevelDebug DEBUG FINE
-syn keyword logLevelTrace TRACE FINER FINEST
+"syn keyword logLevelNotice NOTICE
+"syn keyword logLevelInfo INFO
+"syn keyword logLevelDebug DEBUG FINE
+"syn keyword logLevelTrace TRACE FINER FINEST
 
 syn keyword jblue TX tx
 syn keyword jmag RX rx
@@ -106,10 +108,11 @@ syntax match jmag /\a*RX/
 syntax match jblue /\a*tx/
 syntax match jmag /\a*rx/
 
+syn match jgray '\w*=0'
+
 syntax match jyel /.*WARN.*/
 syntax match jyel /.*warn.*/
 syntax match jred /.*ERR.*/
-syntax match jred /.*error.*/
 syntax match jred /.*CRITICAL.*/
 syntax match jred /.*CRIT.*/
 syntax match jred /.*FATAL.*/
@@ -121,6 +124,7 @@ highlight jcyan ctermfg=cyan
 highlight jgreen ctermfg=green
 highlight jblue ctermfg=blue
 highlight jmag ctermfg=magenta
+highlight jgray ctermfg=gray
 
 " Highlight links
 "---------------------------------------------------------------------------
